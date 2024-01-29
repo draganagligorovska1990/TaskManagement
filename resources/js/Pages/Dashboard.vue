@@ -14,7 +14,7 @@ import { Head } from '@inertiajs/inertia-vue3';
             </h2>
         </template>
 
-        <TableLayout :tasks="tasks">
+        <TableLayout :tasks="tasks" :isAdmin="isAdmin">
 
         </TableLayout>
     </BreezeAuthenticatedLayout>
@@ -23,6 +23,7 @@ import { Head } from '@inertiajs/inertia-vue3';
 export default {
     props: {
         tasks: Array,
+        isAdmin: Boolean
     }
 }
 </script>

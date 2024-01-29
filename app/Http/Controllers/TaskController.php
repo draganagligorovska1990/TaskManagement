@@ -14,8 +14,9 @@ class TaskController extends Controller
         $status = $request->query('status');
         $date_from = $request->query('date_from');
         $date_to = $request->query('date_to');
+        $isAdmin = auth()->user()->can('manage all tasks');
 
-        $tasks = Task::where('user_id', auth()->user()->id);
+        $tasks = $isAdmin ? Task::select('*') : Task::where('user_id', auth()->user()->id);
 
         if ($status && $status != "all") {
             $tasks = $tasks->where('status', $status);
@@ -29,10 +30,14 @@ class TaskController extends Controller
             $tasks = $tasks->where('due_date', '<=', $date_to);
         }
 
-        $tasks = $tasks->orderBy('updated_at', 'desc');
+        if ($isAdmin) {
+            $tasks = $tasks->join('users', 'users.id', '=', 'tasks.user_id');
+        }
+
+        $tasks = $tasks->orderBy('tasks.updated_at', 'desc');
         $tasks = $tasks->get();
 
-        return Inertia::render('Dashboard', ['tasks' => $tasks]);
+        return Inertia::render('Dashboard', ['tasks' => $tasks, 'isAdmin' => $isAdmin]);
     }
 
     public function show(Task $task)

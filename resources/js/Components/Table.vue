@@ -1,3 +1,9 @@
+<script setup>
+import { useForm } from '@inertiajs/inertia-vue3'
+import VueDatePicker from "@vuepic/vue-datepicker";
+import '@vuepic/vue-datepicker/dist/main.css';
+</script>
+
 <template>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div class="min-h-200  flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
@@ -28,9 +34,9 @@
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-<!--                    <th scope="col" class="px-6 py-3">-->
-<!--                        User-->
-<!--                    </th>-->
+                    <th v-if="isAdmin" scope="col" class="px-6 py-3">
+                        User
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         Title
                     </th>
@@ -50,12 +56,12 @@
             </thead>
             <tbody>
                 <tr v-for="(task, index) in tasks" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-<!--                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">-->
-<!--                        <div class="ps-3">-->
-<!--                            <div class="text-base font-semibold">Neil Sims</div>-->
-<!--                            <div class="font-normal text-gray-500">neil.sims@flowbite.com</div>-->
-<!--                        </div>-->
-<!--                    </th>-->
+                    <th v-if="isAdmin" scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                        <div class="ps-3">
+                            <div class="text-base font-semibold">{{ task.name }}</div>
+                            <div class="font-normal text-gray-500">{{ task.email }}</div>
+                        </div>
+                    </th>
                     <td class="px-6 py-4">
                         {{ task.title }}
                     </td>
@@ -82,18 +88,13 @@
     </div>
 </template>
 
-<script setup>
-import { useForm } from '@inertiajs/inertia-vue3'
-import VueDatePicker from "@vuepic/vue-datepicker";
-import '@vuepic/vue-datepicker/dist/main.css';
-</script>
-
 <script>
 const form = useForm();
 export default {
     components: {VueDatePicker},
     props: {
         tasks: Array,
+        isAdmin: Boolean
     },
     data() {
         return {
