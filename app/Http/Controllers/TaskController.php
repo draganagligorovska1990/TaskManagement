@@ -20,11 +20,11 @@ class TaskController extends Controller
             $tasks = $tasks->where('status', $status);
         }
 
-        if ($date_from != 'null') {
+        if ($date_from && $date_from != 'null') {
             $tasks = $tasks->where('due_date', '>=', $date_from);
         }
 
-        if ($date_to  != 'null') {
+        if ($date_from && $date_to  != 'null') {
             $tasks = $tasks->where('due_date', '<=', $date_to);
         }
 
