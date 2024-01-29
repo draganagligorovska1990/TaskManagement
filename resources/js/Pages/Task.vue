@@ -82,7 +82,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 
 const errors = ref({})
 const success = ref('')

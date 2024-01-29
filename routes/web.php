@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,5 +27,8 @@ Route::get('/', function () {
 });
 
 Route::resource('task', TaskController::class)->middleware(['auth', 'verified']);
+
+Route::get('comment/{task}', '\App\Http\Controllers\CommentController@create')->middleware(['auth', 'verified']);
+Route::post('comment', '\App\Http\Controllers\CommentController@store')->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';
