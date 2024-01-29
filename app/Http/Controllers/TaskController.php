@@ -49,13 +49,14 @@ class TaskController extends Controller
     {
         $validated = $request->validated();
 
-        Task::create([
-            'user_id' => auth()->user()->id,
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'status' => $validated['status'],
-            'due_date' => $validated['due_date']
-        ]);
+        $task = new Task();
+        $task->user_id = auth()->user()->id;
+        $task->title = $validated['title'];
+        $task->description = $validated['description'];
+        $task->status = $validated['status'];
+        $task->due_date = $validated['due_date'];
+
+        $task->save();
 
         return response(['success' => true]);
     }
