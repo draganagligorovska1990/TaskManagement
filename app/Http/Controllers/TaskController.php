@@ -31,7 +31,7 @@ class TaskController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'string|max:1000',
+            'description' => 'string|nullable|max:1000',
             'status' => 'required|string|max:255',
             'due_date' => 'required|date|date_format:Y-m-d H:i:s'
         ]);
@@ -56,7 +56,7 @@ class TaskController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'string|max:1000',
+            'description' => 'string|nullable|max:1000',
             'status' => 'required|string|max:255',
             'due_date' => 'required|date|date_format:Y-m-d H:i:s'
         ]);
