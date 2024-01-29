@@ -72,6 +72,7 @@
                     </td>
                     <td class="px-6 py-4">
                         <a href="#" v-on:click="showTaskDetails(task.id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Details</a><br>
+                        <a href="#" v-on:click="addComment(task.id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Add comment</a><br>
                         <a href="#" v-on:click="updateTask(task.id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a><br>
                         <a href="#" v-on:click="deleteTask(task.id)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
                     </td>
@@ -124,8 +125,11 @@ export default {
         updateTask(id) {
             window.location.href = '/task/'+id+'/edit';
         },
-        showTaskDetails (id) {
+        showTaskDetails(id) {
             window.location.href = '/task/'+id;
+        },
+        addComment(task_id) {
+            window.location.href = '/comment/'+task_id;
         },
         filter() {
             if (!this.form.date_to && !this.form.date_to && !this.form.status) {

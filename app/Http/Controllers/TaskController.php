@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Task;
@@ -36,7 +37,7 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        return Inertia::render('Details', ['task' => $task]);
+        return Inertia::render('Details', ['task' => $task, 'comments' => $task->comments]);
     }
 
     public function create()
@@ -44,22 +45,18 @@ class TaskController extends Controller
         return Inertia::render('Task');
     }
 
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'string|nullable|max:1000',
-            'status' => 'required|string|max:255',
-            'due_date' => 'required|date|date_format:Y-m-d H:i:s'
-        ]);
+        $validated = $request->validated();
 
-        Task::create([
-            'user_id' => auth()->user()->id,
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status,
-            'due_date' => $request->due_date
-        ]);
+        $task = new Task();
+        $task->user_id = auth()->user()->id;
+        $task->title = $validated['title'];
+        $task->description = $validated['description'];
+        $task->status = $validated['status'];
+        $task->due_date = $validated['due_date'];
+
+        $task->save();
 
         return response(['success' => true]);
     }
@@ -69,19 +66,14 @@ class TaskController extends Controller
         return Inertia::render('Task', ['task' => $task]);
     }
 
-    public function update(Request $request, Task $task)
+    public function update(StoreTaskRequest $request, Task $task)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'string|nullable|max:1000',
-            'status' => 'required|string|max:255',
-            'due_date' => 'required|date|date_format:Y-m-d H:i:s'
-        ]);
+        $validated = $request->validated();
 
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->status = $request->status;
-        $task->due_date = $request->due_date;
+        $task->title = $validated['title'];
+        $task->description = $validated['description'];
+        $task->status = $validated['status'];
+        $task->due_date = $validated['due_date'];
 
         $task->save();
 
