@@ -14661,15 +14661,22 @@ var __default__ = {
       window.location.href = '/task/' + id;
     },
     filter: function filter() {
-      var dateFrom = null;
-      var dateTo = null;
-      if (this.form.date_from) {
-        dateFrom = this.formatDate(new Date(this.form.date_from));
+      if (!this.form.date_to && !this.form.date_to && !this.form.status) {
+        alert("Please select min one filter!");
+      } else {
+        var dateFrom = null;
+        var dateTo = null;
+        var url = '/task?status=' + this.form.status;
+        if (this.form.date_from !== undefined && this.form.date_from !== null) {
+          dateFrom = this.formatDate(new Date(this.form.date_from));
+          url = url + "&date_from=" + dateFrom;
+        }
+        if (this.form.date_to !== undefined && this.form.date_to !== null) {
+          dateTo = this.formatDate(new Date(this.form.date_to));
+          url = url + "&date_to=" + dateTo;
+        }
+        window.location.href = url;
       }
-      if (this.form.date_to) {
-        dateTo = this.formatDate(new Date(this.form.date_to));
-      }
-      window.location.href = '/task?date_from=' + dateFrom + '&date_to=' + dateTo + '&status=' + this.form.status;
     },
     formatDate: function formatDate(date) {
       var year = date.getFullYear();
@@ -15718,7 +15725,7 @@ var _hoisted_3 = {
 };
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   value: "all"
-}, "Status", -1 /* HOISTED */);
+}, "All statuses", -1 /* HOISTED */);
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "To do", -1 /* HOISTED */);
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "In progress", -1 /* HOISTED */);
 var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "Completed", -1 /* HOISTED */);

@@ -6,7 +6,7 @@
                     <VueDatePicker id="dueDateFrom" placeholder="Date from" class="mb-1" v-model="form.date_from"></VueDatePicker>
                     <VueDatePicker id="dueDateTo" placeholder="Date to" class="mb-1" v-model="form.date_to"></VueDatePicker>
                     <select placeholder="Status" v-model="form.status" class="mb-1 block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                        <option value="all">Status</option>
+                        <option value="all">All statuses</option>
                         <option>To do</option>
                         <option>In progress</option>
                         <option>Completed</option>
@@ -128,15 +128,23 @@ export default {
             window.location.href = '/task/'+id;
         },
         filter() {
-            let dateFrom = null;
-            let dateTo = null;
-            if (this.form.date_from) {
-                dateFrom = this.formatDate(new Date(this.form.date_from));
+            if (!this.form.date_to && !this.form.date_to && !this.form.status) {
+                alert ("Please select min one filter!");
+            } else {
+                let dateFrom = null;
+                let dateTo = null;
+                let url = '/task?status=' + this.form.status;
+                if (this.form.date_from !== undefined && this.form.date_from !== null) {
+                    dateFrom = this.formatDate(new Date(this.form.date_from));
+                    url = url + "&date_from="+dateFrom;
+                }
+                if (this.form.date_to !== undefined && this.form.date_to !== null) {
+                    dateTo = this.formatDate(new Date(this.form.date_to));
+                    url = url + "&date_to="+dateTo;
+                }
+
+                window.location.href = url;
             }
-            if (this.form.date_to) {
-                dateTo = this.formatDate(new Date(this.form.date_to));
-            }
-            window.location.href = '/task?date_from='+dateFrom+'&date_to='+dateTo+'&status='+this.form.status;
         },
         formatDate(date) {
             let year = date.getFullYear();
