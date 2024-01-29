@@ -33,7 +33,7 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'string|max:1000',
             'status' => 'required|string|max:255',
-            'dueDate' => 'required|date|date_format:Y-m-d H:i:s'
+            'due_date' => 'required|date|date_format:Y-m-d H:i:s'
         ]);
 
         Task::create([
@@ -41,7 +41,7 @@ class TaskController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'status' => $request->status,
-            'due_date' => $request->dueDate
+            'due_date' => $request->due_date
         ]);
 
         return response(['success' => true]);
@@ -52,9 +52,23 @@ class TaskController extends Controller
         return Inertia::render('Task', ['task' => $task]);
     }
 
-    public function update()
+    public function update(Request $request, Task $task)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'string|max:1000',
+            'status' => 'required|string|max:255',
+            'due_date' => 'required|date|date_format:Y-m-d H:i:s'
+        ]);
 
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->status = $request->status;
+        $task->due_date = $request->due_date;
+
+        $task->save();
+
+        return response(['success' => true]);
     }
 
     public function destroy(Task $task)
