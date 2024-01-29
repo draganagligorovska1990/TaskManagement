@@ -1,31 +1,20 @@
 <template>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-            <div>
-                <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 mx-5" type="button">
-                    <span class="sr-only">Action button</span>
-                    Action
-                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                    </svg>
-                </button>
-                <!-- Dropdown menu -->
-                <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reward</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Promote</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activate account</a>
-                        </li>
-                    </ul>
-                    <div class="py-1">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete User</a>
-                    </div>
-                </div>
+        <div class="min-h-200  flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+            <div class="p-10">
+                <form @submit.prevent="filter">
+                    <VueDatePicker id="dueDateFrom" placeholder="Date from" class="mb-1" v-model="form.date_from"></VueDatePicker>
+                    <VueDatePicker id="dueDateTo" placeholder="Date to" class="mb-1" v-model="form.date_to"></VueDatePicker>
+                    <select placeholder="Status" v-model="form.status" class="mb-1 block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <option value="all">Status</option>
+                        <option>To do</option>
+                        <option>In progress</option>
+                        <option>Completed</option>
+                    </select>
+                    <button class="inline-flex items-center text-blue-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="submit">
+                        Filter
+                    </button>
+                </form>
             </div>
 
             <div>
@@ -91,16 +80,40 @@
         </table>
     </div>
 </template>
-<script>
-import { useForm } from '@inertiajs/inertia-vue3'
 
+<script setup>
+import { useForm } from '@inertiajs/inertia-vue3'
+import VueDatePicker from "@vuepic/vue-datepicker";
+import '@vuepic/vue-datepicker/dist/main.css';
+</script>
+
+<script>
 const form = useForm();
 export default {
+    components: {VueDatePicker},
     props: {
         tasks: Array,
     },
     data() {
-
+        return {
+            form: {
+                date_from: null,
+                date_to: null,
+                status: 'all'
+            }
+        }
+    },
+    created() {
+        let urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('status')) {
+            this.form.status = urlParams.get('status');
+        }
+        if (urlParams.has('date_from')) {
+            this.form.date_from = urlParams.get('date_from');
+        }
+        if (urlParams.has('date_to')) {
+            this.form.date_to = urlParams.get('date_to');
+        }
     },
     methods: {
         deleteTask(id) {
@@ -113,6 +126,26 @@ export default {
         },
         showTaskDetails (id) {
             window.location.href = '/task/'+id;
+        },
+        filter() {
+            let dateFrom = null;
+            let dateTo = null;
+            if (this.form.date_from) {
+                dateFrom = this.formatDate(new Date(this.form.date_from));
+            }
+            if (this.form.date_to) {
+                dateTo = this.formatDate(new Date(this.form.date_to));
+            }
+            window.location.href = '/task?date_from='+dateFrom+'&date_to='+dateTo+'&status='+this.form.status;
+        },
+        formatDate(date) {
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+
+            return year + "-" + (month > 9 ? '' : '0') + month + "-" + (day > 9 ? '' : '0') + day + " " + (hours > 9 ? '' : '0') + hours + ":" + (minutes > 9 ? '' : '0') + minutes + ":00";
         }
     }
 }

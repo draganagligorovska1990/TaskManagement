@@ -8,11 +8,28 @@ use App\Models\Task;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::where('user_id', auth()->user()->id)
-            ->orderBy('updated_at', 'desc')
-            ->get();
+        $status = $request->query('status');
+        $date_from = $request->query('date_from');
+        $date_to = $request->query('date_to');
+
+        $tasks = Task::where('user_id', auth()->user()->id);
+
+        if ($status && $status != "all") {
+            $tasks = $tasks->where('status', $status);
+        }
+
+        if ($date_from != 'null') {
+            $tasks = $tasks->where('due_date', '>=', $date_from);
+        }
+
+        if ($date_to  != 'null') {
+            $tasks = $tasks->where('due_date', '<=', $date_to);
+        }
+
+        $tasks = $tasks->orderBy('updated_at', 'desc');
+        $tasks = $tasks->get();
 
         return Inertia::render('Dashboard', ['tasks' => $tasks]);
     }

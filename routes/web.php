@@ -25,6 +25,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::resource('task', TaskController::class);
+Route::resource('task', TaskController::class)->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';
