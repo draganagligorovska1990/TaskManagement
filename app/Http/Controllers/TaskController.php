@@ -16,7 +16,9 @@ class TaskController extends Controller
         $date_to = $request->query('date_to');
         $isAdmin = auth()->user()->can('manage all tasks');
 
-        $tasks = $isAdmin ? Task::select('*') : Task::where('user_id', auth()->user()->id);
+        $tasks = $isAdmin
+            ? Task::select(array('tasks.*', 'users.name', 'users.email'))
+            : Task::where('user_id', auth()->user()->id);
 
         if ($status && $status != "all") {
             $tasks = $tasks->where('status', $status);
